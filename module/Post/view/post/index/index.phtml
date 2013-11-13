@@ -1,0 +1,52 @@
+<a class="btn btn-success" href="<?php echo $this->url('post/default', array('controller' => 'categoria', 'action' => 'inserir')); ?>">Cadastar</a>
+<br>
+<?php
+if ($this->success)
+    echo '<div class="alert alert-success">'.$this->success[0].'<button type="button" class="close" data-dismiss="alert">×</button></div>';
+
+if ($this->error)
+    echo '<div class="alert alert-danger">'.$this->error[0].'<button type="button" class="close" data-dismiss="alert">×</button></div>';
+?>
+<table class="table table-bordered table-striped table-hover table-condensed">
+    <caption>Todas os Posts</caption>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>TITULO</th>
+        <th>DESCRIÇÃO</th>
+        <th>CATEGORIA</th>
+        <th>CADASTRO</th>
+        <th>ALTERADO</th>
+        <th>ATIVO</th>
+        <th>AÇÃO</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    /**
+     * @var $entity \Post\Entity\Post
+     */
+    ?>
+    <?php if ($this->data): ?>
+        <?php foreach( $this->data as $entity): ?>
+        <tr>
+            <td><?php echo $entity->getId(); ?></td>
+            <td><?php echo $entity->getTitulo(); ?></td>
+            <td><?php echo $entity->getDescricao(); ?></td>
+            <td><?php echo $entity->getCategory()->getNome(); ?></td>
+            <td><?php echo $entity->getCadastro()->format('d/m/Y'); ?></td>
+            <td><?php echo ($entity->getAlterado()) ? $entity->getAlterado()->format('d/m/Y') : '---'; ?></td>
+            <td><?php echo ($entity->getAtivo()) ? 'Sim' : 'Não'; ?></td>
+            <td>
+                <a class="btn btn-success" href="<?php echo $this->url('post/default', array('controller' => 'post', 'action' => 'editar', 'id' => $entity->getId())); ?>"><i class="glyphicon glyphicon-pencil"></i> </a>
+                <a class="btn btn-danger" href="<?php echo $this->url('post/default', array('controller' => 'post', 'action' => 'excluir', 'id' => $entity->getId())); ?>"><i class="glyphicon glyphicon-remove-sign"></i> </a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Nenhum registro encontrado!</p>
+    <?php endif; ?>
+
+
+    </tbody>
+</table>

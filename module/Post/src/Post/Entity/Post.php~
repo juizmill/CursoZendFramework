@@ -1,0 +1,77 @@
+<?php
+
+namespace Post\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Post
+ *
+ * @ORM\Table(name="post", indexes={@ORM\Index(name="fk_post_categoria_idx", columns={"category"})})
+ * @ORM\Entity
+ */
+class Post
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="titulo", type="string", length=80, nullable=false)
+     */
+    private $titulo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descricao", type="string", length=150, nullable=true)
+     */
+    private $descricao;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="texto", type="text", nullable=false)
+     */
+    private $texto;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="cadastro", type="datetime", nullable=false)
+     */
+    private $cadastro;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="alterado", type="datetime", nullable=true)
+     */
+    private $alterado;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ativo", type="boolean", nullable=false)
+     */
+    private $ativo = '0';
+
+    /**
+     * @var \Categoria\Entity\Category
+     *
+     * @ORM\ManyToOne(targetEntity="Categoria\Entity\Category")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="category", referencedColumnName="id")
+     * })
+     */
+    private $category;
+
+
+}
