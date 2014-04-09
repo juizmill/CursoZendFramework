@@ -13,7 +13,7 @@
     },
     "minimum-stability": "dev",
     "require-dev": {
-        "doctrine/doctrine-orm-module": "dev-master",
+        "doctrine/doctrine-orm-module": "0.8.0",
         "hounddog/doctrine-data-fixture-module": "dev-master"
     },
     "config": {

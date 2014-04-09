@@ -7,46 +7,84 @@ if ($this->success)
 if ($this->error)
     echo '<div class="alert alert-danger">'.$this->error[0].'<button type="button" class="close" data-dismiss="alert">×</button></div>';
 ?>
-<table class="table table-bordered table-striped table-hover table-condensed">
-    <caption>Todas os Posts</caption>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>TITULO</th>
-        <th>DESCRIÇÃO</th>
-        <th>CATEGORIA</th>
-        <th>CADASTRO</th>
-        <th>ALTERADO</th>
-        <th>ATIVO</th>
-        <th>AÇÃO</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
-    /**
-     * @var $entity \Post\Entity\Post
-     */
-    ?>
-    <?php if ($this->data): ?>
-        <?php foreach( $this->data as $entity): ?>
+<?php  if ($this->data->getCurrentItemCount() > 0): ?>
+<form id="form-grid" action="" method="post">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+        <caption>Todas os Posts</caption>
+        <thead>
         <tr>
-            <td><?php echo $entity->getId(); ?></td>
-            <td><?php echo $entity->getTitulo(); ?></td>
-            <td><?php echo $entity->getDescricao(); ?></td>
-            <td><?php echo $entity->getCategory()->getNome(); ?></td>
-            <td><?php echo $entity->getCadastro()->format('d/m/Y'); ?></td>
-            <td><?php echo ($entity->getAlterado()) ? $entity->getAlterado()->format('d/m/Y') : '---'; ?></td>
-            <td><?php echo ($entity->getAtivo()) ? 'Sim' : 'Não'; ?></td>
-            <td>
-                <a class="btn btn-success" href="<?php echo $this->url('post/default', array('controller' => 'post', 'action' => 'editar', 'id' => $entity->getId())); ?>"><i class="glyphicon glyphicon-pencil"></i> </a>
-                <a class="btn btn-danger" href="<?php echo $this->url('post/default', array('controller' => 'post', 'action' => 'excluir', 'id' => $entity->getId())); ?>"><i class="glyphicon glyphicon-remove-sign"></i> </a>
-            </td>
+            <th style="width: 30px"><input type="checkbox" name="todos" /></th>
+            <th>TITULO</th>
+            <th>DESCRIÇÃO</th>
+            <th>CATEGORIA</th>
+            <th>CADASTRO</th>
+            <th>ALTERADO</th>
+            <th>ATIVO</th>
+            <th>AÇÃO</th>
         </tr>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Nenhum registro encontrado!</p>
-    <?php endif; ?>
+        </thead>
+        <tbody>
+        <?php
+        /**
+         * @var $entity \Post\Entity\Post
+         */
+        ?>
 
+            <?php foreach( $this->data as $entity): ?>
+            <tr>
+                <td><input class="post" type="checkbox" name="post[]" value="<?php echo $entity->getId(); ?>" /></td>
+                <td><?php echo $entity->getTitulo(); ?></td>
+                <td><?php echo $entity->getDescricao(); ?></td>
+                <td><?php echo $entity->getCategory()->getNome(); ?></td>
+                <td><?php echo $entity->getCadastro()->format('d/m/Y'); ?></td>
+                <td><?php echo ($entity->getAlterado()) ? $entity->getAlterado()->format('d/m/Y') : '---'; ?></td>
+                <td><?php echo ($entity->getAtivo()) ? 'Sim' : 'Não'; ?></td>
+                <td>
+                    <a class="btn btn-success" href="<?php echo $this->url('post/default', array('controller' => 'post', 'action' => 'editar', 'id' => $entity->getId())); ?>"><i class="glyphicon glyphicon-pencil"></i> </a>
+                    <a class="btn btn-danger" href="<?php echo $this->url('post/default', array('controller' => 'post', 'action' => 'excluir', 'id' => $entity->getId())); ?>"><i class="glyphicon glyphicon-remove-sign"></i> </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</form>
 
-    </tbody>
-</table>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('input[type=checkbox]').prop('checked', false);
+            $('input[name=todos]').on('click', function(){
+                if($(this).is(':checked')){
+                    $('.post').prop('checked', true)
+                    if($('#btn-excluir').length == 0){
+                        $('#form-grid table').before('<br><br><div id="btn-excluir" style="margin-bottom: 15px"><button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i> Excluir</button></div>');
+                    }
+                }else{
+                    $('input[type=checkbox]').prop('checked', false);
+                    $('#btn-excluir').remove();
+                }
+            });
+
+            $('input[type=checkbox]').on('click', function(){
+
+                if($(this).attr('name') != 'totos'){
+                    if($(this).is(':checked')){
+                        $(this).prop('checked', true)
+
+                        if($('#btn-excluir').length == 0){
+                            $('#form-grid table').before('<br><br><div id="btn-excluir" style="margin-bottom: 15px"><button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i> Excluir</button></div>');
+                        }
+                    }else{
+                        $(this).prop('checked', false);
+                        if($('.post:checked').length == 0){
+                            $('input[type=checkbox]').prop('checked', false);
+                            $('#btn-excluir').remove();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+<?php else: ?>
+    <p>Nenhum registro encontrado!</p>
+<?php endif; ?>
